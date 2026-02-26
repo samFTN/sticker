@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instagram Question Sticker</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #353d4e 0%, #4b5563 100%);
+      min-height: 100vh;
+       padding: 3rem 1rem 3rem 1rem; /* top right bottom left */
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      margin-bottom: 2rem;
+    }
+
+    .header h1 {
+      color: white;
+      font-size: 2.5rem;
+      margin-bottom: 4rem;
+      text-align: center;
+    }
+
+    .header p {
+      color: #d1d5db;
+      font-size: 1.125rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 2.5rem;
+    }
+
+   @media (max-width: 1024px) {
+  .grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;  /* centre toutes les sections horizontalement */
+    gap: 2.5rem;
+  }
+
+  .preview-section, 
+  .control-panel {
+    width: 100%;          /* tu peux mettre 90% si tu veux réduire un peu la largeur */
+    max-width: 500px;     /* limite la largeur pour que ça paraisse centré */
+  }
+
+  .control-panel {
+    align-items: center;  /* centre les cartes */
+  }
+
+  .control-panel .card {
+    width: 80%;           /* réduit la largeur des cartes pour laisser du margin auto */
+    margin: 0 auto;       /* assure le centrage */
+  }
+}
+
+   .preview-section {
+  grid-column: span 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+    .preview-title {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #d1d5db;
+      font-size: .875rem;
+      font-weight: 600;
+    }
+
+   .sticker {
+  background: #fef08a;
+  border-radius: 1.5rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  margin: 0 auto;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  width: 100%;
+  max-width: 430px;
+  
+  display: flex;
+  flex-direction: column;
+}
+
+    .sticker-header {
+      background: #000000;
+      color: #d1d5db;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 12px;
+      flex-shrink: 0;
+      height: 73px;
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      word-break: break-word;
+      overflow-wrap: break-word;
+      white-space: normal;
+      cursor: text;
+      outline: none;
+      transition: background 0.2s;
+      user-select: text;
+    }
+
+    .sticker-header:hover {
+      background: #000;
+    }
+
+    .sticker-header:focus {
+      background: #000;
+    }
+
+    .sticker-body {
+  background: white;
+  color: #111827;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  /* IMPORTANT */
+  padding: 24px 32px;
+
+  font-weight: 500;
+  line-height: 1.35;
+
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+
+  cursor: text;
+  outline: none;
+  transition: background 0.2s;
+  user-select: text;
+
+  font-size: 26px;
+
+  /* IMPORTANT */
+  min-height: 120px;
+}
+
+    .sticker-body:hover {
+      background: #f3f4f6;
+    }
+
+    .sticker-body:focus {
+      background: #f3f4f6;
+    }
+
+    .instructions {
+      margin-top: 2rem;
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.5);
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+
+    .instructions strong {
+      color: #93c5fd;
+    }
+
+    .instructions ul {
+      margin-top: 0.5rem;
+      list-style-position: inside;
+      color: #93c5fd;
+      font-size: 0.875rem;
+    }
+
+    .instructions li {
+      margin-top: 0.25rem;
+    }
+
+    .control-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    .card h3 {
+      color: #111827;
+      font-size: 1.125rem;
+      margin-bottom: 1rem;
+    }
+
+    .card.warning {
+      background: #fef2f2;
+      border: 2px solid #dc2626;
+    }
+
+    .card.warning h3 {
+      color: #b91c1c;
+    }
+
+    .stat {
+      margin-bottom: 1rem;
+    }
+
+    .stat-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .stat-label span:first-child {
+      color: #374151;
+    }
+
+    .stat-label span:last-child {
+      color: #16a34a;
+      font-weight: bold;
+    }
+
+    .stat-label.warning span {
+      color: #dc2626;
+    }
+
+    .stat-label.warning span:last-child {
+      font-size: 1.05rem;
+    }
+
+    .stat-bar {
+      height: 0.5rem;
+      background: #d1d5db;
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .stat-bar.warning {
+      background: #fca5a5;
+    }
+
+    .stat-fill {
+      height: 100%;
+      background: #22c55e;
+      border-radius: 9999px;
+      transition: width 0.3s;
+    }
+
+    .stat-fill.warning {
+      background: #dc2626;
+    }
+
+    .stat-warning-text {
+      color: #dc2626;
+      font-size: 0.75rem;
+      font-weight: bold;
+      margin-top: 0.25rem;
+    }
+
+    .button {
+      padding: 0.75rem 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .button-primary {
+      background: #2563eb;
+      color: white;
+      width: 100%;
+    }
+
+    .button-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .button-secondary {
+      background: #6b7280;
+      color: white;
+      width: 100%;
+    }
+
+    .button-secondary:hover {
+      background: #4b5563;
+    }
+
+    .dimensions {
+      color: #374151;
+      font-size: 0.875rem;
+    }
+
+    .dimensions p {
+      margin-bottom: 0.5rem;
+    }
+
+    .dimensions strong {
+      color: #111827;
+    }
+
+    .dimensions-small {
+      color: #6b7280;
+      font-size: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .tips {
+      background: white;
+      border-left: 4px solid #2563eb;
+      border-radius: 0.75rem;
+      padding: 1rem;
+      font-size: 0.875rem;
+      color: #1f2937;
+    }
+
+    .tips strong {
+      color: #111827;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>📱 Instagram Question Sticker</h1>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT: STICKER PREVIEW -->
+      <div class="preview-section">
+        <div class="preview-title">📱 APERÇU</div>
+        
+        <div class="sticker" id="sticker">
+          <div class="sticker-header" id="headerText" contenteditable="true">Posez-moi une question</div>
+          <div class="sticker-body" id="questionText" contenteditable="true">Entrez quelque chose...</div>
+        </div>
+      </div>
+
+      <!-- RIGHT: CONTROL PANEL -->
+      <div class="control-panel">
+        <!-- STATS -->
+        <div class="card" id="statsCard">
+          <h3>📊 Stats</h3>
+          
+          <div class="stat">
+            <div class="stat-label" id="headerLabel">
+              <span>Header (max 60)</span>
+              <span id="headerCount">17/60</span>
+            </div>
+            <div class="stat-bar" id="headerBar">
+              <div class="stat-fill" id="headerFill" style="width: 28%"></div>
+            </div>
+            <div id="headerWarning" class="stat-warning-text" style="display: none;">⚠️ Limite atteinte !</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-label" id="questionLabel">
+              <span>Question (max 100)</span>
+              <span id="questionCount">18/100</span>
+            </div>
+            <div class="stat-bar" id="questionBar">
+              <div class="stat-fill" id="questionFill" style="width: 18%"></div>
+            </div>
+            <div id="questionWarning" class="stat-warning-text" style="display: none;">⚠️ Limite atteinte !</div>
+          </div>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="card">
+  <h3>🎯 Actions</h3>
+  <button class="button button-primary" onclick="downloadPNG()">
+    ⬇️ Télécharger PNG
+  </button>
+</div>
+      </div>        
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+  <script>
+    let headerText = 'Posez-moi une question';
+    let questionText = 'Entrez quelque chose...';
+
+    const headerEl = document.getElementById('headerText');
+    const questionEl = document.getElementById('questionText');
+
+    function updateStats() {
+      const headerLength = headerText.length;
+      const questionLength = questionText.length;
+
+      const headerAtLimit = headerLength >= 60;
+      const questionAtLimit = questionLength >= 100;
+
+      // Update counts
+      document.getElementById('headerCount').textContent = headerLength + '/60';
+      document.getElementById('questionCount').textContent = questionLength + '/100';
+
+      // Update fills
+      document.getElementById('headerFill').style.width = Math.min((headerLength / 60) * 100, 100) + '%';
+      document.getElementById('questionFill').style.width = Math.min((questionLength / 100) * 100, 100) + '%';
+
+      // Update colors
+      const headerLabel = document.getElementById('headerLabel');
+      const questionLabel = document.getElementById('questionLabel');
+      const headerBar = document.getElementById('headerBar');
+      const questionBar = document.getElementById('questionBar');
+      const headerFill = document.getElementById('headerFill');
+      const questionFill = document.getElementById('questionFill');
+      const headerWarning = document.getElementById('headerWarning');
+      const questionWarning = document.getElementById('questionWarning');
+      const statsCard = document.getElementById('statsCard');
+
+      // Header
+      if (headerAtLimit) {
+        headerLabel.classList.add('warning');
+        headerBar.classList.add('warning');
+        headerFill.classList.add('warning');
+        headerWarning.style.display = 'block';
+      } else {
+        headerLabel.classList.remove('warning');
+        headerBar.classList.remove('warning');
+        headerFill.classList.remove('warning');
+        headerWarning.style.display = 'none';
+      }
+
+      // Question
+      if (questionAtLimit) {
+        questionLabel.classList.add('warning');
+        questionBar.classList.add('warning');
+        questionFill.classList.add('warning');
+        questionWarning.style.display = 'block';
+      } else {
+        questionLabel.classList.remove('warning');
+        questionBar.classList.remove('warning');
+        questionFill.classList.remove('warning');
+        questionWarning.style.display = 'none';
+      }
+
+      // Card background
+      if (headerAtLimit || questionAtLimit) {
+        statsCard.classList.add('warning');
+      } else {
+        statsCard.classList.remove('warning');
+      }
+    }
+
+    headerEl.addEventListener('input', (e) => {
+  headerText = e.currentTarget.textContent;
+  updateStats();
+});
+
+    headerEl.addEventListener('blur', (e) => {
+      if (!e.currentTarget.textContent.trim()) {
+        headerText = 'Posez-moi une question';
+        headerEl.textContent = 'Posez-moi une question';
+      }
+    });
+
+    questionEl.addEventListener('input', (e) => {
+  questionText = e.currentTarget.textContent;
+  updateStats();
+});
+
+    questionEl.addEventListener('blur', (e) => {
+      if (!e.currentTarget.textContent.trim()) {
+        questionText = 'Entrez quelque chose...';
+        questionEl.textContent = 'Entrez quelque chose...';
+        updateStats();
+      }
+    });
+
+    function copyBoth() {
+      navigator.clipboard.writeText(headerText + '\n' + questionText);
+    }
+
+    function reset() {
+      headerText = 'Posez-moi une question';
+      questionText = 'Entrez quelque chose...';
+      headerEl.textContent = 'Posez-moi une question';
+      questionEl.textContent = 'Entrez quelque chose...';
+      updateStats();
+    }
+
+   function downloadPNG() {
+  const sticker = document.getElementById("sticker");
+
+  html2canvas(sticker, {
+    backgroundColor: null,  // fond transparent
+    scale: 3,                // haute résolution pour CapCut
+    useCORS: true            // utile si tu ajoutes des images externes plus tard
+  }).then(canvas => {
+    const link = document.createElement("a");
+    link.download = "instagram-question-sticker.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  });
+}
+
+    // Initialize
+    updateStats();
+  </script>
+</body>
+</html>

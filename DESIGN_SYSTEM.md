@@ -16,6 +16,9 @@
 
 **Règle :** Le symbole ™ s'écrit toujours après "Guitarisation" dans les textes visibles (titres, boutons, footer). Pas dans les noms de fichiers ni les URLs.
 
+**Format du titre de page (`<title>`) :** `Sujet de la page — Guitarisation™`
+Exemple : `Métronome — Guitarisation™`. Le sujet (sous-domaine ou fonction de la page) est toujours en premier.
+
 ---
 
 ## 2. Typographie
@@ -165,6 +168,7 @@ header {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
+  position: relative; z-index: 10; /* crée un contexte d'empilement au-dessus de .anim-card */
 }
 
 .header-byline {

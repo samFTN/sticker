@@ -411,7 +411,123 @@ Quand une section affiche plusieurs blocs côte à côte dans une grille (ex. ch
 
 ---
 
-## 15. Checklist de démarrage d'un nouveau site
+## 15. Bouton d'aide flottant (?)
+
+À ajouter uniquement sur les sites dont l'utilisation n'est pas évidente (outils interactifs, interfaces complexes). Ne pas ajouter sur les pages simples de type tableau de bord ou liste.
+
+**Comportement :**
+- Bouton `?` fixe, coin inférieur droit de l'écran, toujours visible au scroll
+- Un clic ouvre/ferme le panneau d'aide (toggle) — **pas de survol**
+- Un clic en dehors du panneau le ferme
+- Le contenu est propre à chaque site (instructions d'utilisation spécifiques)
+
+### HTML
+
+À placer juste avant `</body>` :
+
+```html
+<button class="help-btn" id="helpBtn" onclick="toggleHelp()" aria-label="Aide">?</button>
+
+<div class="help-panel" id="helpPanel">
+  <div class="help-header">
+    <span class="help-title">Comment utiliser ce site</span>
+    <button class="help-close" onclick="toggleHelp()" aria-label="Fermer">✕</button>
+  </div>
+  <div class="help-body">
+    <!-- Contenu spécifique au site -->
+    <p><strong>Titre de la section</strong></p>
+    <p>Explication ici.</p>
+  </div>
+</div>
+```
+
+### CSS
+
+```css
+/* Bouton flottant ? */
+.help-btn {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--dark);
+  color: white;
+  font-size: 20px; font-weight: 700; font-family: inherit;
+  border: none; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.22);
+  transition: background 0.15s, transform 0.12s;
+  z-index: 200;
+  line-height: 1;
+}
+.help-btn:hover { background: var(--accent); transform: scale(1.08); }
+.help-btn.open  { background: var(--accent); }
+
+/* Panneau d'aide */
+.help-panel {
+  display: none;
+  position: fixed;
+  bottom: 78px; right: 24px;
+  width: 300px;
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.14), 0 4px 16px rgba(0,0,0,0.08);
+  z-index: 199;
+  overflow: hidden;
+}
+.help-panel.open { display: block; }
+
+.help-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid var(--border2);
+}
+.help-title {
+  font-size: 13px; font-weight: 700; color: var(--dark);
+}
+.help-close {
+  background: none; border: none; cursor: pointer;
+  font-size: 14px; color: var(--muted2);
+  line-height: 1; padding: 2px 4px; border-radius: 4px;
+  transition: color 0.1s, background 0.1s;
+}
+.help-close:hover { color: var(--dark); background: var(--border2); }
+
+.help-body {
+  padding: 14px 16px 16px;
+  font-size: 13px; line-height: 1.6; color: var(--text);
+  max-height: 320px; overflow-y: auto;
+}
+.help-body p { margin-bottom: 10px; }
+.help-body p:last-child { margin-bottom: 0; }
+.help-body strong { color: var(--dark); font-weight: 700; }
+
+@media (max-width: 640px) {
+  .help-panel { width: calc(100vw - 32px); right: 16px; bottom: 72px; }
+  .help-btn   { bottom: 16px; right: 16px; }
+}
+```
+
+### JS
+
+```js
+function toggleHelp() {
+  const btn   = document.getElementById('helpBtn');
+  const panel = document.getElementById('helpPanel');
+  const isOpen = panel.classList.toggle('open');
+  btn.classList.toggle('open', isOpen);
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('#helpBtn') && !e.target.closest('#helpPanel')) {
+    document.getElementById('helpPanel').classList.remove('open');
+    document.getElementById('helpBtn').classList.remove('open');
+  }
+});
+```
+
+---
+
+## 16. Checklist de démarrage d'un nouveau site
 
 - [ ] Copier les variables CSS (section 3) dans `:root`
 - [ ] Importer Inter (section 2)
@@ -422,3 +538,4 @@ Quand une section affiche plusieurs blocs côte à côte dans une grille (ex. ch
 - [ ] Ajouter le footer copyright (section 14)
 - [ ] Placer `Logo Guitarisation.png` à la racine du projet
 - [ ] Vérifier que ™ est présent après chaque occurrence textuelle de "Guitarisation"
+- [ ] Si site interactif complexe : ajouter le bouton d'aide flottant (section 15)
